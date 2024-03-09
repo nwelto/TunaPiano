@@ -50,6 +50,48 @@ app.MapDelete("/genres/{genreId}", (TunaPianoDbContext dbContext, int genreId) =
     return Results.NoContent();
 });
 
+app.MapGet("/genres/{genreId}", (TunaPianoDbContext dbContext, int genreId) =>
+{
+    var genreWithSongs = dbContext.Genres
+        .Where(g => g.Id == genreId)
+        .Select(g => new
+        {
+            g.Id,
+            g.Name,
+            g.Description,
+            Songs = g.SongGenres.Select(sg => new
+            {
+                sg.Song.Id,
+                sg.Song.Title,
+                sg.Song.ArtistId,
+                sg.Song.Album,
+                sg.Song.Length
+            }).ToList()
+        })
+        .FirstOrDefault();
+
+    if (genreWithSongs == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(genreWithSongs);
+});
+
+app.MapGet("/genres", (TunaPianoDbContext dbContext) =>
+{
+    var genres = dbContext.Genres
+        .Select(g => new
+        {
+            g.Id,
+            g.Description 
+        })
+        .ToList();
+
+    return Results.Ok(genres);
+});
+
+
 
 app.MapPost("/songs", (TunaPianoDbContext dbContext, Song song) =>
 {
@@ -71,6 +113,40 @@ app.MapDelete("/songs/{songId}", (TunaPianoDbContext dbContext, int songId) =>
 
     return Results.NoContent();
 });
+
+app.MapGet("/songs/{songId}", (TunaPianoDbContext dbContext, int songId) =>
+{
+    var songDetails = dbContext.Songs
+        .Where(s => s.Id == songId)
+        .Select(s => new
+        {
+            s.Id,
+            s.Title,
+            Artist = new
+            {
+                s.Artist.Id,
+                s.Artist.Name,
+                s.Artist.Age,
+                s.Artist.Bio
+            },
+            s.Album,
+            s.Length,
+            Genres = s.SongGenres.Select(sg => new
+            {
+                sg.Genre.Id,
+                sg.Genre.Description
+            }).ToList()
+        })
+        .FirstOrDefault();
+
+    if (songDetails == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(songDetails);
+});
+
 
 
 app.MapPost("/artists", (TunaPianoDbContext dbContext, Artist artist) =>
@@ -121,6 +197,22 @@ app.MapGet("/artists/{artistId}", (TunaPianoDbContext dbContext, int artistId) =
 
     return Results.Ok(artist);
 });
+
+app.MapGet("/artists", (TunaPianoDbContext dbContext) =>
+{
+    var artists = dbContext.Artists
+        .Select(a => new
+        {
+            a.Id,
+            a.Name,
+            a.Age,
+            a.Bio
+        })
+        .ToList();
+
+    return Results.Ok(artists);
+});
+
 
 
 

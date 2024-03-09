@@ -14,7 +14,7 @@ namespace TunaPiano.Models
         public string Album { get; set; }
 
         [Required]
-        public int Length { get; set; } // Assuming length is in seconds
+        public int Length { get; set; } 
 
         [ForeignKey("Artist")]
         public int ArtistId { get; set; }
