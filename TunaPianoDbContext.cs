@@ -22,10 +22,10 @@ public class TunaPianoDbContext : DbContext
         );
 
         modelBuilder.Entity<Genre>().HasData(
-            new { Id = 1, Name = "Orchestral" },
-            new { Id = 2, Name = "J-Pop" },
-            new { Id = 3, Name = "Rock" },
-            new { Id = 4, Name = "Electronic" }
+            new { Id = 1, Name = "Orchestral", Description = "A genre of music that is orchestrated and instrumental." },
+            new { Id = 2, Name = "J-Pop", Description = "Popular music from Japan, also known as Japanese pop music." },
+            new { Id = 3, Name = "Rock", Description = "A broad genre of popular music that emphasizes electric guitars, drums, and strong vocals." },
+            new { Id = 4, Name = "Electronic", Description = "Music that employs electronic musical instruments and technology in its production." }
         );
 
         modelBuilder.Entity<Song>().HasData(
