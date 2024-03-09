@@ -92,7 +92,6 @@ app.MapGet("/genres", (TunaPianoDbContext dbContext) =>
 });
 
 
-
 app.MapPost("/songs", (TunaPianoDbContext dbContext, Song song) =>
 {
     dbContext.Songs.Add(song);
@@ -145,6 +144,22 @@ app.MapGet("/songs/{songId}", (TunaPianoDbContext dbContext, int songId) =>
     }
 
     return Results.Ok(songDetails);
+});
+
+app.MapGet("/songs", (TunaPianoDbContext dbContext) =>
+{
+    var songs = dbContext.Songs
+        .Select(s => new
+        {
+            s.Id,
+            s.Title,
+            s.Album,
+            s.Length,
+            s.ArtistId
+        })
+        .ToList();
+
+    return Results.Ok(songs);
 });
 
 
